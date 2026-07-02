@@ -1,0 +1,9 @@
+target/
+uploads/
+*.class
+*.log
+.idea/
+.vscode/
+.DS_Store
+notes.md
+my_restaurant_sujet.pdf
