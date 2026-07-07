@@ -1,0 +1,122 @@
+<!-- @format -->
+
+<!doctype html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="~{fragments :: head('Configuration')}"></head>
+	<body class="font-sans text-neutral-800 bg-neutral-50">
+		<header th:replace="~{admin/fragments-admin :: nav('config')}"></header>
+
+		<main class="max-w-xl mx-auto px-6 py-12">
+			<h1 class="font-serif text-2xl mb-8">Configuration du site</h1>
+
+			<form
+				method="post"
+				action="/admin/config"
+				enctype="multipart/form-data"
+				class="bg-white border border-neutral-200 p-8 space-y-5">
+				<label class="block text-sm font-medium">
+					Nom du restaurant
+					<input
+						type="text"
+						name="nom"
+						th:value="${config.nom}"
+						required
+						class="mt-1 w-full border border-neutral-300 px-3 py-2 font-normal focus:outline-none focus:border-neutral-500" />
+				</label>
+
+				<label class="block text-sm font-medium">
+					URL du site
+					<input
+						type="url"
+						name="url"
+						th:value="${config.url}"
+						required
+						class="mt-1 w-full border border-neutral-300 px-3 py-2 font-normal focus:outline-none focus:border-neutral-500" />
+				</label>
+
+				<label class="block text-sm font-medium">
+					Couleur du site
+					<input
+						type="color"
+						name="couleur"
+						th:value="${config.couleur}"
+						class="mt-1 block w-20 h-10 border border-neutral-300 cursor-pointer" />
+				</label>
+
+				<div class="text-sm font-medium">
+					Bannière actuelle
+					<img
+						th:src="@{'/uploads/' + ${config.banniere}}"
+						alt=""
+						class="mt-1 w-full h-32 object-cover border border-neutral-200" />
+					<label class="block mt-2">
+						Remplacer la bannière
+						<input
+							type="file"
+							name="banniere"
+							accept="image/*"
+							class="mt-1 w-full text-sm font-normal text-neutral-500 file:mr-3 file:border-0 file:bg-neutral-800 file:text-white file:px-4 file:py-2 file:cursor-pointer" />
+					</label>
+				</div>
+
+				<hr class="border-neutral-100" />
+				<p class="text-sm font-medium text-neutral-500">
+					Informations sur le restaurant
+				</p>
+
+				<label class="block text-sm font-medium">
+					Adresse
+					<input
+						type="text"
+						name="adresse"
+						th:value="${config.adresse}"
+						required
+						class="mt-1 w-full border border-neutral-300 px-3 py-2 font-normal focus:outline-none focus:border-neutral-500" />
+				</label>
+
+				<div class="grid grid-cols-2 gap-4">
+					<label class="block text-sm font-medium">
+						Téléphone
+						<input
+							type="tel"
+							name="telephone"
+							th:value="${config.telephone}"
+							class="mt-1 w-full border border-neutral-300 px-3 py-2 font-normal focus:outline-none focus:border-neutral-500" />
+					</label>
+					<label class="block text-sm font-medium">
+						Email
+						<input
+							type="email"
+							name="email"
+							th:value="${config.email}"
+							class="mt-1 w-full border border-neutral-300 px-3 py-2 font-normal focus:outline-none focus:border-neutral-500" />
+					</label>
+				</div>
+
+				<label class="block text-sm font-medium">
+					Horaires
+					<textarea
+						name="horaires"
+						rows="3"
+						th:text="${config.horaires}"
+						class="mt-1 w-full border border-neutral-300 px-3 py-2 font-normal focus:outline-none focus:border-neutral-500"></textarea>
+				</label>
+
+				<label class="block text-sm font-medium">
+					Présentation du restaurant
+					<textarea
+						name="description"
+						rows="3"
+						th:text="${config.description}"
+						class="mt-1 w-full border border-neutral-300 px-3 py-2 font-normal focus:outline-none focus:border-neutral-500"></textarea>
+				</label>
+
+				<button
+					type="submit"
+					class="w-full bg-neutral-900 text-white py-3 text-sm font-medium hover:bg-neutral-700">
+					Enregistrer
+				</button>
+			</form>
+		</main>
+	</body>
+</html>

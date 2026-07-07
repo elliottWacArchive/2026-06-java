@@ -1,0 +1,59 @@
+<!-- @format -->
+
+<!doctype html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="~{fragments :: head('Les menus')}"></head>
+	<body class="font-sans text-neutral-800 bg-white">
+		<header th:replace="~{fragments :: hero(false)}"></header>
+
+		<main class="max-w-3xl mx-auto px-6 py-16">
+			<h1 class="font-serif text-3xl text-center mb-14">Les menus</h1>
+
+			<p th:if="${menus.isEmpty()}" class="text-center text-neutral-500">
+				Les menus arrivent bientôt.
+			</p>
+
+			<section
+				th:each="menu : ${menus}"
+				class="mb-16 border border-neutral-200 p-8 md:p-10">
+				<h2 class="font-serif text-2xl text-center mb-10">
+					<span th:text="${menu.nom}">menu</span>
+					<span th:if="${menu.isReduit()}" class="ml-3 whitespace-nowrap">
+						<span
+							class="text-neutral-400 text-base line-through align-middle"
+							th:text="${#numbers.formatDecimal(menu.prixDefaut, 1, 'POINT', 2, 'COMMA')} + ' €'"
+							>prix defaut</span
+						>
+						<span
+							class="text-accent text-3xl align-middle"
+							th:text="${#numbers.formatDecimal(menu.prix, 1, 'POINT', 2, 'COMMA')} + ' €'"
+							>prix</span
+						>
+					</span>
+					<span
+						th:if="${!menu.isReduit() && menu.prixAffiche.signum() > 0}"
+						class="ml-3 text-accent"
+						th:text="${#numbers.formatDecimal(menu.prixAffiche, 1, 'POINT', 2, 'COMMA')} + ' €'"
+						>prix</span
+					>
+					<span class="block w-10 h-px bg-accent mx-auto mt-3"></span>
+				</h2>
+				<div th:each="section : ${menu.sections}" class="mb-10 last:mb-0">
+					<h3
+						class="font-serif text-lg mb-5 text-accent"
+						th:text="${section.nom}">
+						section
+					</h3>
+					<div class="space-y-6">
+						<th:block th:each="plat : ${section.plats}">
+							<article
+								th:replace="~{fragments :: ligne-plat(${plat}, ${menu})}"></article>
+						</th:block>
+					</div>
+				</div>
+			</section>
+		</main>
+
+		<footer th:replace="~{fragments :: footer}"></footer>
+	</body>
+</html>

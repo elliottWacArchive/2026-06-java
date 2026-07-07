@@ -1,0 +1,151 @@
+<!-- @format -->
+
+<!doctype html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Configuration</title>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
+			rel="stylesheet" />
+		<script>
+			tailwind.config = {
+				theme: {
+					extend: {
+						fontFamily: {
+							serif: ['Playfair Display', 'serif'],
+							sans: ['Inter', 'sans-serif'],
+						},
+					},
+				},
+			};
+		</script>
+	</head>
+	<body class="font-sans text-neutral-800 bg-neutral-50">
+		<main class="max-w-xl mx-auto px-6 py-16">
+			<h1 class="font-serif text-3xl text-center mb-2">Bienvenue</h1>
+			<p class="text-center text-neutral-500 text-sm mb-10">
+				Configurez votre restaurant avant de mettre le site en ligne.
+			</p>
+
+			<form
+				method="post"
+				action="/setup"
+				enctype="multipart/form-data"
+				th:object="${form}"
+				class="bg-white border border-neutral-200 p-8 space-y-5">
+				<div
+					th:if="${#fields.hasAnyErrors()}"
+					class="bg-red-50 border border-red-200 text-red-700 text-sm p-3">
+					<p th:each="err : ${#fields.allErrors()}" th:text="${err}">erreur</p>
+				</div>
+
+				<label class="block text-sm font-medium">
+					Nom du restaurant
+					<input
+						type="text"
+						th:field="*{nom}"
+						required
+						class="mt-1 w-full border border-neutral-300 px-3 py-2 font-normal focus:outline-none focus:border-neutral-500" />
+				</label>
+
+				<label class="block text-sm font-medium">
+					URL du site
+					<input
+						type="url"
+						th:field="*{url}"
+						required
+						class="mt-1 w-full border border-neutral-300 px-3 py-2 font-normal focus:outline-none focus:border-neutral-500" />
+				</label>
+
+				<label class="block text-sm font-medium">
+					Couleur du site
+					<input
+						type="color"
+						th:field="*{couleur}"
+						class="mt-1 block w-20 h-10 border border-neutral-300 cursor-pointer" />
+				</label>
+
+				<label class="block text-sm font-medium">
+					Bannière du site
+					<input
+						type="file"
+						name="banniere"
+						accept="image/*"
+						required
+						class="mt-1 w-full text-sm font-normal text-neutral-500 file:mr-3 file:border-0 file:bg-neutral-800 file:text-white file:px-4 file:py-2 file:cursor-pointer" />
+				</label>
+
+				<label class="block text-sm font-medium">
+					Mot de passe administrateur
+					<input
+						type="password"
+						th:field="*{motDePasse}"
+						required
+						class="mt-1 w-full border border-neutral-300 px-3 py-2 font-normal focus:outline-none focus:border-neutral-500" />
+					<span class="block mt-1 text-xs font-normal text-neutral-400"
+						>Minimum 8 caractères, une minuscule, une majuscule et un
+						chiffre.</span
+					>
+				</label>
+
+				<hr class="border-neutral-100" />
+				<p class="text-sm font-medium text-neutral-500">
+					Informations sur le restaurant
+				</p>
+
+				<label class="block text-sm font-medium">
+					Adresse
+					<input
+						type="text"
+						th:field="*{adresse}"
+						required
+						class="mt-1 w-full border border-neutral-300 px-3 py-2 font-normal focus:outline-none focus:border-neutral-500" />
+				</label>
+
+				<div class="grid grid-cols-2 gap-4">
+					<label class="block text-sm font-medium">
+						Téléphone
+						<input
+							type="tel"
+							th:field="*{telephone}"
+							class="mt-1 w-full border border-neutral-300 px-3 py-2 font-normal focus:outline-none focus:border-neutral-500" />
+					</label>
+					<label class="block text-sm font-medium">
+						Email
+						<input
+							type="email"
+							th:field="*{email}"
+							class="mt-1 w-full border border-neutral-300 px-3 py-2 font-normal focus:outline-none focus:border-neutral-500" />
+					</label>
+				</div>
+
+				<label class="block text-sm font-medium">
+					Horaires
+					<textarea
+						th:field="*{horaires}"
+						rows="3"
+						placeholder="Lundi - Vendredi : 12h - 14h30, 19h - 22h30"
+						class="mt-1 w-full border border-neutral-300 px-3 py-2 font-normal focus:outline-none focus:border-neutral-500"></textarea>
+				</label>
+
+				<label class="block text-sm font-medium">
+					Présentation du restaurant
+					<textarea
+						th:field="*{description}"
+						rows="3"
+						class="mt-1 w-full border border-neutral-300 px-3 py-2 font-normal focus:outline-none focus:border-neutral-500"></textarea>
+				</label>
+
+				<button
+					type="submit"
+					class="w-full bg-neutral-900 text-white py-3 text-sm font-medium hover:bg-neutral-700">
+					Mettre le site en ligne
+				</button>
+			</form>
+		</main>
+	</body>
+</html>

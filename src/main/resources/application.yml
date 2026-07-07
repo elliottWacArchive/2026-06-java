@@ -1,3 +1,5 @@
+# @format
+
 spring:
   application:
     name: my_restaurant

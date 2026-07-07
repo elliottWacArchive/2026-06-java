@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Avis')}"></head>
+<body class="font-sans text-neutral-800 bg-white">
+
+<header th:replace="~{fragments :: hero(false)}"></header>
+
+<main class="max-w-3xl mx-auto px-6 py-16">
+    <h1 class="font-serif text-3xl text-center mb-14">Les avis</h1>
+
+    <section class="border border-neutral-200 p-8 mb-14">
+        <h2 class="font-serif text-xl mb-6">Laisser un avis</h2>
+        <form method="post" action="/reviews" class="space-y-4">
+            <div class="grid md:grid-cols-2 gap-4">
+                <label class="block text-sm">
+                    Nom
+                    <input type="text" name="nom" required class="mt-1 w-full border border-neutral-300 px-3 py-2 focus:outline-none focus:border-accent">
+                </label>
+                <label class="block text-sm">
+                    Email <span class="text-neutral-400">(optionnel)</span>
+                    <input type="email" name="email" class="mt-1 w-full border border-neutral-300 px-3 py-2 focus:outline-none focus:border-accent">
+                </label>
+            </div>
+            <div class="grid md:grid-cols-2 gap-4 items-end">
+                <label class="block text-sm">
+                    Date
+                    <input type="date" name="date" th:value="${aujourdhui}" required class="mt-1 w-full border border-neutral-300 px-3 py-2 focus:outline-none focus:border-accent">
+                </label>
+                <div class="text-sm">
+                    Note
+                    <!-- radios caches, flex inverse pour colorer les etoiles precedentes au survol -->
+                    <div class="mt-1 flex flex-row-reverse justify-end gap-1 text-2xl" id="etoiles">
+                        <th:block th:each="i : ${#numbers.sequence(5, 1, -1)}">
+                            <input type="radio" name="note" th:id="'note' + ${i}" th:value="${i}" th:required="${i == 1}" class="hidden peer">
+                            <label th:for="'note' + ${i}" class="cursor-pointer text-neutral-300 peer-checked:text-accent select-none">★</label>
+                        </th:block>
+                    </div>
+                    <style>
+                        #etoiles label:hover, #etoiles label:hover ~ label,
+                        #etoiles input:checked ~ label { color: var(--accent); }
+                    </style>
+                </div>
+            </div>
+            <label class="block text-sm">
+                Commentaire <span class="text-neutral-400">(optionnel)</span>
+                <textarea name="commentaire" rows="3" class="mt-1 w-full border border-neutral-300 px-3 py-2 focus:outline-none focus:border-accent"></textarea>
+            </label>
+            <button type="submit" class="bg-accent text-white px-6 py-2.5 text-sm font-medium hover:opacity-90">Publier</button>
+        </form>
+    </section>
+
+    <p th:if="${reviews.isEmpty()}" class="text-center text-neutral-500">Aucun avis pour le moment.</p>
+
+    <div class="space-y-6">
+        <article th:each="review : ${reviews}" class="border-b border-neutral-100 pb-6">
+            <div class="flex items-center justify-between mb-1">
+                <p class="font-medium text-sm" th:text="${review.nom}">nom</p>
+                <p class="text-xs text-neutral-400" th:text="${#temporals.format(review.date, 'dd/MM/yyyy')}">date</p>
+            </div>
+            <p class="text-accent tracking-wider">
+                <span th:each="i : ${#numbers.sequence(1, 5)}" th:text="${i <= review.note} ? '★' : '☆'"></span>
+            </p>
+            <p class="text-sm text-neutral-600 mt-2" th:if="${review.commentaire}" th:text="${review.commentaire}">commentaire</p>
+        </article>
+    </div>
+
+</main>
+
+<footer th:replace="~{fragments :: footer}"></footer>
+
+</body>
+</html>

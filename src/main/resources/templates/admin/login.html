@@ -1,0 +1,41 @@
+<!-- @format -->
+
+<!doctype html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="~{fragments :: head('Administration')}"></head>
+	<body class="font-sans text-neutral-800 bg-neutral-50">
+		<main class="max-w-sm mx-auto px-6 py-24">
+			<h1 class="font-serif text-2xl text-center mb-8">Administration</h1>
+			<form
+				method="post"
+				action="/admin/login"
+				class="bg-white border border-neutral-200 p-8 space-y-4">
+				<p
+					th:if="${erreur}"
+					class="bg-red-50 border border-red-200 text-red-700 text-sm p-3"
+					th:text="${erreur}">
+					erreur
+				</p>
+				<label class="block text-sm font-medium">
+					Mot de passe
+					<input
+						type="password"
+						name="motDePasse"
+						required
+						autofocus
+						class="mt-1 w-full border border-neutral-300 px-3 py-2 font-normal focus:outline-none focus:border-neutral-500" />
+				</label>
+				<button
+					type="submit"
+					class="w-full bg-neutral-900 text-white py-2.5 text-sm font-medium hover:bg-neutral-700">
+					Se connecter
+				</button>
+			</form>
+			<p class="text-center mt-6">
+				<a href="/" class="text-sm text-neutral-400 hover:text-accent"
+					>Retour au site</a
+				>
+			</p>
+		</main>
+	</body>
+</html>

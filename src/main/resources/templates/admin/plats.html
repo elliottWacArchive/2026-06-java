@@ -1,0 +1,76 @@
+<!-- @format -->
+
+<!doctype html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="~{fragments :: head('Les plats')}"></head>
+	<body class="font-sans text-neutral-800 bg-neutral-50">
+		<header th:replace="~{admin/fragments-admin :: nav('plats')}"></header>
+
+		<main class="max-w-3xl mx-auto px-6 py-12">
+			<div class="flex items-center justify-between mb-8">
+				<h1 class="font-serif text-2xl">Les plats</h1>
+				<a
+					href="/admin/plats/nouveau"
+					class="bg-neutral-900 text-white px-5 py-2.5 text-sm font-medium hover:bg-neutral-700"
+					>Nouveau plat</a
+				>
+			</div>
+
+			<p th:if="${plats.isEmpty()}" class="text-sm text-neutral-500">
+				Aucun plat pour le moment.
+			</p>
+
+			<div class="space-y-3">
+				<div
+					th:each="plat : ${plats}"
+					class="bg-white border border-neutral-200 p-4 flex items-center gap-4">
+					<img
+						th:if="${plat.photo}"
+						th:src="@{'/uploads/' + ${plat.photo}}"
+						alt=""
+						class="w-14 h-14 object-cover shrink-0" />
+					<div
+						th:unless="${plat.photo}"
+						class="w-14 h-14 bg-neutral-100 shrink-0"></div>
+					<div class="flex-1 min-w-0">
+						<p class="font-medium text-sm" th:text="${plat.nom}">nom</p>
+						<p
+							class="text-xs text-neutral-500 truncate"
+							th:text="${plat.description}">
+							description
+						</p>
+						<p class="text-xs text-neutral-400 mt-0.5">
+							<span
+								th:text="${plat.carteSection != null} ? 'Carte : ' + ${plat.carteSection.nom} : 'Hors carte'"
+								>carte</span
+							>
+							<span
+								th:if="${!plat.menuSections.isEmpty()}"
+								th:text="' · ' + ${plat.menuSections.size()} + ' section(s) de menu'"></span>
+						</p>
+					</div>
+					<p
+						class="text-sm font-medium whitespace-nowrap"
+						th:text="${#numbers.formatDecimal(plat.prix, 1, 'POINT', 2, 'COMMA')} + ' €'">
+						prix
+					</p>
+					<a
+						th:href="@{'/admin/plats/' + ${plat.id}}"
+						class="border border-neutral-900 px-4 py-2 text-sm font-medium hover:bg-neutral-900 hover:text-white"
+						>Modifier</a
+					>
+					<form
+						method="post"
+						th:action="@{'/admin/plats/' + ${plat.id} + '/delete'}"
+						onsubmit="return confirm('Supprimer ce plat ?');">
+						<button
+							type="submit"
+							class="border border-red-300 text-red-600 px-4 py-2 text-sm font-medium hover:bg-red-600 hover:text-white hover:border-red-600">
+							Supprimer
+						</button>
+					</form>
+				</div>
+			</div>
+		</main>
+	</body>
+</html>

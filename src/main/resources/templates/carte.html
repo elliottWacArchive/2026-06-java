@@ -1,0 +1,32 @@
+<!-- @format -->
+
+<!doctype html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="~{fragments :: head('La carte')}"></head>
+	<body class="font-sans text-neutral-800 bg-white">
+		<header th:replace="~{fragments :: hero(false)}"></header>
+
+		<main class="max-w-3xl mx-auto px-6 py-16">
+			<h1 class="font-serif text-3xl text-center mb-14">La carte</h1>
+
+			<p th:if="${sections.isEmpty()}" class="text-center text-neutral-500">
+				La carte arrive bientôt.
+			</p>
+
+			<section th:each="section : ${sections}" class="mb-14">
+				<h2 class="font-serif text-2xl mb-8 text-center">
+					<span th:text="${section.nom}">section</span>
+					<span class="block w-10 h-px bg-accent mx-auto mt-3"></span>
+				</h2>
+				<div class="space-y-8">
+					<th:block th:each="plat : ${section.plats}">
+						<article
+							th:replace="~{fragments :: ligne-plat(${plat}, null)}"></article>
+					</th:block>
+				</div>
+			</section>
+		</main>
+
+		<footer th:replace="~{fragments :: footer}"></footer>
+	</body>
+</html>

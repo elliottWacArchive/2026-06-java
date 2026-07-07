@@ -1,0 +1,147 @@
+<!-- @format -->
+
+<!doctype html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="~{fragments :: head('Plat')}"></head>
+	<body class="font-sans text-neutral-800 bg-neutral-50">
+		<header th:replace="~{admin/fragments-admin :: nav('plats')}"></header>
+
+		<main class="max-w-xl mx-auto px-6 py-12">
+			<h1
+				class="font-serif text-2xl mb-8"
+				th:text="${plat.id != null} ? 'Modifier le plat' : 'Nouveau plat'">
+				plat
+			</h1>
+
+			<form
+				method="post"
+				action="/admin/plats/save"
+				enctype="multipart/form-data"
+				class="bg-white border border-neutral-200 p-8 space-y-5">
+				<input
+					type="hidden"
+					name="id"
+					th:if="${plat.id != null}"
+					th:value="${plat.id}" />
+
+				<label class="block text-sm font-medium">
+					Nom du plat
+					<input
+						type="text"
+						name="nom"
+						th:value="${plat.nom}"
+						required
+						class="mt-1 w-full border border-neutral-300 px-3 py-2 font-normal focus:outline-none focus:border-neutral-500" />
+				</label>
+
+				<div class="text-sm font-medium">
+					<img
+						th:if="${plat.photo}"
+						th:src="@{'/uploads/' + ${plat.photo}}"
+						alt=""
+						class="w-24 h-24 object-cover border border-neutral-200 mb-2" />
+					<label class="block">
+						Photo
+						<input
+							type="file"
+							name="photo"
+							accept="image/*"
+							th:required="${plat.photo == null}"
+							class="mt-1 w-full text-sm font-normal text-neutral-500 file:mr-3 file:border-0 file:bg-neutral-800 file:text-white file:px-4 file:py-2 file:cursor-pointer" />
+					</label>
+				</div>
+
+				<label class="block text-sm font-medium">
+					Brève description
+					<textarea
+						name="description"
+						rows="2"
+						required
+						th:text="${plat.description}"
+						class="mt-1 w-full border border-neutral-300 px-3 py-2 font-normal focus:outline-none focus:border-neutral-500"></textarea>
+				</label>
+
+				<label class="block text-sm font-medium">
+					Prix (€)
+					<input
+						type="number"
+						name="prix"
+						step="0.01"
+						min="0"
+						th:value="${plat.prix}"
+						required
+						class="mt-1 w-32 border border-neutral-300 px-3 py-2 font-normal focus:outline-none focus:border-neutral-500" />
+				</label>
+
+				<div class="text-sm font-medium">
+					Allergènes
+					<div class="mt-2 grid grid-cols-2 gap-2">
+						<label
+							th:each="a : ${allergenes}"
+							class="flex items-center gap-2 font-normal text-neutral-600">
+							<input
+								type="checkbox"
+								name="allergenes"
+								th:value="${a}"
+								th:checked="${plat.allergenes.contains(a)}" />
+							<span th:text="${a.label}">allergene</span>
+						</label>
+					</div>
+				</div>
+
+				<hr class="border-neutral-100" />
+				<p class="text-sm font-medium text-neutral-500">Assignation</p>
+
+				<label class="block text-sm font-medium">
+					Section de la carte
+					<select
+						name="carteSectionId"
+						class="mt-1 w-full border border-neutral-300 px-3 py-2 font-normal bg-white focus:outline-none focus:border-neutral-500">
+						<option value="">— Aucune —</option>
+						<option
+							th:each="s : ${carteSections}"
+							th:value="${s.id}"
+							th:text="${s.nom}"
+							th:selected="${plat.carteSection != null && plat.carteSection.id == s.id}"></option>
+					</select>
+				</label>
+
+				<div class="text-sm font-medium" th:if="${!menus.isEmpty()}">
+					Sections de menus
+					<div th:each="menu : ${menus}" class="mt-2">
+						<p
+							class="text-xs text-neutral-400 uppercase tracking-wide"
+							th:text="${menu.nom}">
+							menu
+						</p>
+						<div class="mt-1 grid grid-cols-2 gap-2">
+							<label
+								th:each="s : ${menu.sections}"
+								class="flex items-center gap-2 font-normal text-neutral-600">
+								<input
+									type="checkbox"
+									name="menuSectionIds"
+									th:value="${s.id}"
+									th:checked="${plat.menuSections.contains(s)}" />
+								<span th:text="${s.nom}">section</span>
+							</label>
+						</div>
+					</div>
+				</div>
+
+				<div class="flex gap-3">
+					<button
+						type="submit"
+						class="flex-1 bg-neutral-900 text-white py-3 text-sm font-medium hover:bg-neutral-700">
+						Enregistrer
+					</button>
+					<a
+						href="/admin/plats"
+						class="border border-neutral-300 px-6 py-3 text-sm font-medium text-neutral-600 hover:border-neutral-500"
+						>Annuler</a
+					>
+				</div>
+			</form>
+		</main>
+	</body>
+</html>

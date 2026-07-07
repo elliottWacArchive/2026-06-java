@@ -1,0 +1,54 @@
+<!-- @format -->
+
+<!doctype html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+	<body>
+		<header th:fragment="nav(page)" class="bg-neutral-900 text-white">
+			<div
+				class="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
+				<div class="flex items-center gap-8">
+					<a
+						href="/admin"
+						class="font-serif font-semibold"
+						th:text="${config.nom} + ' — admin'"
+						>admin</a
+					>
+					<nav class="flex gap-5 text-sm">
+						<a
+							href="/admin/carte"
+							class="hover:underline"
+							th:classappend="${page == 'carte'} ? 'underline'"
+							>La carte</a
+						>
+						<a
+							href="/admin/menus"
+							class="hover:underline"
+							th:classappend="${page == 'menus'} ? 'underline'"
+							>Les menus</a
+						>
+						<a
+							href="/admin/plats"
+							class="hover:underline"
+							th:classappend="${page == 'plats'} ? 'underline'"
+							>Les plats</a
+						>
+						<a
+							href="/admin"
+							class="hover:underline"
+							th:classappend="${page == 'config'} ? 'underline'"
+							>Configuration</a
+						>
+					</nav>
+				</div>
+				<div class="flex items-center gap-4 text-sm">
+					<a href="/" class="text-neutral-400 hover:text-white">Voir le site</a>
+					<form method="post" action="/admin/logout">
+						<button type="submit" class="text-neutral-400 hover:text-white">
+							Déconnexion
+						</button>
+					</form>
+				</div>
+			</div>
+		</header>
+	</body>
+</html>

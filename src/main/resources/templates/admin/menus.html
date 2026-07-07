@@ -1,0 +1,175 @@
+<!-- @format -->
+
+<!doctype html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="~{fragments :: head('Les menus')}"></head>
+	<body class="font-sans text-neutral-800 bg-neutral-50">
+		<header th:replace="~{admin/fragments-admin :: nav('menus')}"></header>
+
+		<main class="max-w-3xl mx-auto px-6 py-12">
+			<h1 class="font-serif text-2xl mb-2">Les menus</h1>
+			<p class="text-sm text-neutral-500 mb-8">
+				Chaque menu se compose de sections. Les plats s'assignent aux sections
+				depuis la page "Les plats".
+			</p>
+
+			<form
+				method="post"
+				action="/admin/menus"
+				class="bg-white border border-neutral-200 p-5 flex items-end gap-3 mb-8">
+				<label class="block text-sm font-medium flex-1">
+					Nouveau menu
+					<input
+						type="text"
+						name="nom"
+						required
+						placeholder="Menu du midi, Menu dégustation..."
+						class="mt-1 w-full border border-neutral-300 px-3 py-2 font-normal focus:outline-none focus:border-neutral-500" />
+				</label>
+				<label class="block text-sm font-medium w-32">
+					Prix (€)
+					<input
+						type="number"
+						name="prix"
+						step="0.01"
+						min="0"
+						placeholder="Somme des plats"
+						class="mt-1 w-full border border-neutral-300 px-3 py-2 font-normal focus:outline-none focus:border-neutral-500" />
+				</label>
+				<button
+					type="submit"
+					class="bg-neutral-900 text-white px-5 py-2.5 text-sm font-medium hover:bg-neutral-700">
+					Ajouter
+				</button>
+			</form>
+
+			<p th:if="${menus.isEmpty()}" class="text-sm text-neutral-500">
+				Aucun menu pour le moment.
+			</p>
+
+			<div class="space-y-6">
+				<section
+					th:each="menu : ${menus}"
+					class="bg-white border border-neutral-200 p-5">
+					<div class="flex items-end gap-3 pb-4 border-b border-neutral-100">
+						<form
+							method="post"
+							th:action="@{'/admin/menus/' + ${menu.id}}"
+							class="flex items-end gap-3 flex-1">
+							<label class="block text-sm text-neutral-500 flex-1">
+								Nom du menu
+								<input
+									type="text"
+									name="nom"
+									th:value="${menu.nom}"
+									required
+									class="mt-1 w-full border border-neutral-300 px-3 py-2 text-neutral-800 focus:outline-none focus:border-neutral-500" />
+							</label>
+							<label class="block text-sm text-neutral-500 w-32">
+								Prix (€)
+								<input
+									type="number"
+									name="prix"
+									step="0.01"
+									min="0"
+									th:value="${menu.prix}"
+									th:placeholder="${#numbers.formatDecimal(menu.prixDefaut, 1, 'POINT', 2, 'POINT')}"
+									class="mt-1 w-full border border-neutral-300 px-3 py-2 text-neutral-800 focus:outline-none focus:border-neutral-500" />
+							</label>
+							<button
+								type="submit"
+								class="border border-neutral-900 px-4 py-2.5 text-sm font-medium hover:bg-neutral-900 hover:text-white">
+								Enregistrer
+							</button>
+						</form>
+						<form
+							method="post"
+							th:action="@{'/admin/menus/' + ${menu.id} + '/delete'}"
+							onsubmit="return confirm('Supprimer ce menu et ses sections ?');">
+							<button
+								type="submit"
+								class="border border-red-300 text-red-600 px-4 py-2.5 text-sm font-medium hover:bg-red-600 hover:text-white hover:border-red-600">
+								Supprimer
+							</button>
+						</form>
+					</div>
+
+					<div class="pt-4 pl-4 border-l-2 border-neutral-100 space-y-3">
+						<p
+							class="text-xs font-medium text-neutral-400 uppercase tracking-wide">
+							Sections
+						</p>
+						<div
+							th:each="section : ${menu.sections}"
+							class="flex items-end gap-3">
+							<form
+								method="post"
+								th:action="@{'/admin/menus/sections/' + ${section.id}}"
+								class="flex items-end gap-3 flex-1">
+								<label class="block text-sm text-neutral-500 flex-1">
+									Nom
+									<input
+										type="text"
+										name="nom"
+										th:value="${section.nom}"
+										required
+										class="mt-1 w-full border border-neutral-300 px-3 py-2 text-neutral-800 focus:outline-none focus:border-neutral-500" />
+								</label>
+								<label class="block text-sm text-neutral-500 w-24">
+									Ordre
+									<input
+										type="number"
+										name="position"
+										th:value="${section.position}"
+										class="mt-1 w-full border border-neutral-300 px-3 py-2 text-neutral-800 focus:outline-none focus:border-neutral-500" />
+								</label>
+								<button
+									type="submit"
+									class="border border-neutral-900 px-4 py-2.5 text-sm font-medium hover:bg-neutral-900 hover:text-white">
+									Enregistrer
+								</button>
+							</form>
+							<form
+								method="post"
+								th:action="@{'/admin/menus/sections/' + ${section.id} + '/delete'}"
+								onsubmit="return confirm('Supprimer cette section ?');">
+								<button
+									type="submit"
+									class="border border-red-300 text-red-600 px-4 py-2.5 text-sm font-medium hover:bg-red-600 hover:text-white hover:border-red-600">
+									Supprimer
+								</button>
+							</form>
+						</div>
+						<form
+							method="post"
+							th:action="@{'/admin/menus/' + ${menu.id} + '/sections'}"
+							class="flex items-end gap-3">
+							<label class="block text-sm text-neutral-500 flex-1">
+								Nouvelle section
+								<input
+									type="text"
+									name="nom"
+									required
+									placeholder="Entrée, Plat, Dessert..."
+									class="mt-1 w-full border border-neutral-300 px-3 py-2 text-neutral-800 focus:outline-none focus:border-neutral-500" />
+							</label>
+							<label class="block text-sm text-neutral-500 w-24">
+								Ordre
+								<input
+									type="number"
+									name="position"
+									value="0"
+									class="mt-1 w-full border border-neutral-300 px-3 py-2 text-neutral-800 focus:outline-none focus:border-neutral-500" />
+							</label>
+							<button
+								type="submit"
+								class="bg-neutral-900 text-white px-5 py-2.5 text-sm font-medium hover:bg-neutral-700">
+								Ajouter
+							</button>
+						</form>
+					</div>
+				</section>
+			</div>
+		</main>
+	</body>
+</html>

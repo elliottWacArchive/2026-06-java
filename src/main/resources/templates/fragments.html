@@ -1,0 +1,139 @@
+<!-- @format -->
+
+<!doctype html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+	<head th:fragment="head(titre)">
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title th:text="${config != null ? titre + ' — ' + config.nom : titre}">
+			My Restaurant
+		</title>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
+			rel="stylesheet" />
+		<script>
+			tailwind.config = {
+				theme: {
+					extend: {
+						colors: { accent: 'var(--accent)' },
+						fontFamily: {
+							serif: ['Playfair Display', 'serif'],
+							sans: ['Inter', 'sans-serif'],
+						},
+					},
+				},
+			};
+		</script>
+		<style
+			th:text="':root{--accent:' + (${config != null} ? ${config.couleur} : '#b45309') + '}'"></style>
+	</head>
+
+	<body>
+		<header th:fragment="hero(big)">
+			<nav class="border-b border-neutral-200">
+				<div
+					class="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
+					<a
+						href="/"
+						class="font-serif text-lg font-semibold text-neutral-900"
+						th:text="${config.nom}"
+						>Restaurant</a
+					>
+					<div class="flex items-center gap-6 text-sm">
+						<a href="/" class="text-neutral-600 hover:text-accent">Accueil</a>
+						<a href="/carte" class="text-neutral-600 hover:text-accent"
+							>La carte</a
+						>
+						<a href="/menus" class="text-neutral-600 hover:text-accent"
+							>Les menus</a
+						>
+						<a href="/reviews" class="text-neutral-600 hover:text-accent"
+							>Avis</a
+						>
+					</div>
+				</div>
+			</nav>
+			<div class="relative" th:classappend="${big} ? 'h-80 md:h-96' : 'h-40'">
+				<img
+					th:src="@{'/uploads/' + ${config.banniere}}"
+					alt=""
+					class="absolute inset-0 w-full h-full object-cover" />
+				<div class="absolute inset-0 bg-black/40"></div>
+				<div class="relative h-full flex items-center justify-center">
+					<h1
+						class="font-serif text-white text-center px-6"
+						th:classappend="${big} ? 'text-4xl md:text-6xl' : 'text-3xl'"
+						th:text="${config.nom}">
+						Restaurant
+					</h1>
+				</div>
+			</div>
+		</header>
+
+		<article th:fragment="ligne-plat(plat, menu)" class="flex gap-5">
+			<img
+				th:if="${plat.photo}"
+				th:src="@{'/uploads/' + ${plat.photo}}"
+				alt=""
+				class="w-20 h-20 object-cover shrink-0" />
+			<div class="flex-1 min-w-0">
+				<div class="flex items-baseline gap-2">
+					<h3 class="font-medium" th:text="${plat.nom}">plat</h3>
+					<span class="flex-1 border-b border-dotted border-neutral-300"></span>
+					<span
+						th:if="${menu != null && menu.isReduit()}"
+						class="whitespace-nowrap">
+						<span
+							class="text-neutral-400 text-sm line-through"
+							th:text="${#numbers.formatDecimal(plat.prix, 1, 'POINT', 2, 'COMMA')} + ' €'"
+							>prix</span
+						>
+						<span
+							class="text-accent font-medium"
+							th:text="${#numbers.formatDecimal(menu.prixTheorique(plat), 1, 'POINT', 2, 'COMMA')} + ' €'"
+							>prix reduit</span
+						>
+					</span>
+					<span
+						th:unless="${menu != null && menu.isReduit()}"
+						class="text-accent font-medium whitespace-nowrap"
+						th:text="${#numbers.formatDecimal(plat.prix, 1, 'POINT', 2, 'COMMA')} + ' €'"
+						>prix</span
+					>
+				</div>
+				<p class="text-sm text-neutral-500 mt-1" th:text="${plat.description}">
+					description
+				</p>
+				<p
+					class="text-xs text-neutral-400 mt-1"
+					th:if="${!plat.allergenes.isEmpty()}">
+					Allergènes :
+					<span
+						th:each="a, it : ${plat.allergenes}"
+						th:text="${a.label.toLowerCase()} + (${it.last} ? '' : ', ')"></span>
+				</p>
+			</div>
+		</article>
+
+		<footer th:fragment="footer" class="border-t border-neutral-200 mt-20">
+			<div
+				class="max-w-5xl mx-auto px-6 py-8 text-sm text-neutral-500 flex flex-col md:flex-row justify-between gap-2">
+				<p th:text="${config.nom} + ' — ' + ${config.adresse}">adresse</p>
+				<p>
+					<span th:if="${config.telephone}" th:text="${config.telephone}"
+						>tel</span
+					>
+					<span th:if="${config.telephone != null && config.email != null}">
+						·
+					</span>
+					<span th:if="${config.email}" th:text="${config.email}">email</span>
+				</p>
+				<a href="/admin" class="text-neutral-400 hover:text-accent"
+					>Administration</a
+				>
+			</div>
+		</footer>
+	</body>
+</html>

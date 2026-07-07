@@ -1,33 +1,44 @@
-services:
-  db:
-    image: mysql:8.4
-    environment:
-      MYSQL_DATABASE: my_restaurant
-      MYSQL_USER: restaurant
-      MYSQL_PASSWORD: restaurant
-      MYSQL_ROOT_PASSWORD: root
-    volumes:
-      - db_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-urestaurant", "-prestaurant"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
+# @format
 
-  app:
-    build: .
-    ports:
-      - "8080:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/my_restaurant
-      SPRING_DATASOURCE_USERNAME: restaurant
-      SPRING_DATASOURCE_PASSWORD: restaurant
-    volumes:
-      - uploads:/app/uploads
-    depends_on:
-      db:
-        condition: service_healthy
+services:
+    db:
+        image: mysql:8.4
+        environment:
+            MYSQL_DATABASE: my_restaurant
+            MYSQL_USER: restaurant
+            MYSQL_PASSWORD: restaurant
+            MYSQL_ROOT_PASSWORD: root
+        volumes:
+            - db_data:/var/lib/mysql
+        healthcheck:
+            test:
+                [
+                    'CMD',
+                    'mysqladmin',
+                    'ping',
+                    '-h',
+                    'localhost',
+                    '-urestaurant',
+                    '-prestaurant',
+                ]
+            interval: 5s
+            timeout: 5s
+            retries: 10
+
+    app:
+        build: .
+        ports:
+            - '8080:8080'
+        environment:
+            SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/my_restaurant
+            SPRING_DATASOURCE_USERNAME: restaurant
+            SPRING_DATASOURCE_PASSWORD: restaurant
+        volumes:
+            - uploads:/app/uploads
+        depends_on:
+            db:
+                condition: service_healthy
 
 volumes:
-  db_data:
-  uploads:
+    db_data:
+    uploads:
